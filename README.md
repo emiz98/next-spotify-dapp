@@ -1,23 +1,36 @@
-# Next.js + Tailwind CSS Example
+# Spotify Clone
 
-This example shows how to use [Tailwind CSS](https://tailwindcss.com/) [(v3.0)](https://tailwindcss.com/blog/tailwindcss-v3) with Next.js. It follows the steps outlined in the official [Tailwind docs](https://tailwindcss.com/docs/guides/nextjs).
+![alt text](https://www.scdn.co/i/_global/open-graph-default.png)
+Decentralized spotify clone!
 
-## Deploy your own
+## Dependencies
 
-Deploy the example using [Vercel](https://vercel.com?utm_source=github&utm_medium=readme&utm_campaign=next-example) or preview live with [StackBlitz](https://stackblitz.com/github/vercel/next.js/tree/canary/examples/with-tailwindcss)
+### [ethereum-waffle](https://www.npmjs.com/package/ethereum-waffle)
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https://github.com/vercel/next.js/tree/canary/examples/with-tailwindcss&project-name=with-tailwindcss&repository-name=with-tailwindcss)
+The most advanced framework for testing smart contracts.
 
-## How to use
+### [ethers](https://www.npmjs.com/package/ethers)
 
-Execute [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app) with [npm](https://docs.npmjs.com/cli/init) or [Yarn](https://yarnpkg.com/lang/en/docs/cli/create/) to bootstrap the example:
+A complete Ethereum wallet implementation and utilities in JavaScript (and TypeScript).
 
-```bash
-npx create-next-app --example with-tailwindcss with-tailwindcss-app
-# or
-yarn create next-app --example with-tailwindcss with-tailwindcss-app
-# or
-pnpm create next-app -- --example with-tailwindcss with-tailwindcss-app
-```
+### [@openzeppelin/contracts](https://www.npmjs.com/package/@openzeppelin/contracts)
 
-Deploy it to the cloud with [Vercel](https://vercel.com/new?utm_source=github&utm_medium=readme&utm_campaign=next-example) ([Documentation](https://nextjs.org/docs/deployment)).
+A library for secure smart contract development. Build on a solid foundation of community-vetted code.
+
+### [hardhat](https://www.npmjs.com/package/hardhat)
+
+Hardhat is an Ethereum development environment for professionals. It facilitates performing frequent tasks, such as running tests, automatically checking code for mistakes or interacting with a smart contract.
+
+## Hardhat Plugins
+
+![alt text](https://user-images.githubusercontent.com/176499/96893278-ebc67580-1460-11eb-9530-d5df3a3d65d0.png)
+
+### [hardhat-ethers](https://hardhat.org/plugins/nomiclabs-hardhat-ethers.html)
+
+This plugin brings to Hardhat the Ethereum library ethers.js, which allows you to interact with the Ethereum blockchain in a simple way.
+
+### [hardhat-waffle](https://hardhat.org/plugins/nomiclabs-hardhat-waffle.html)
+
+You can use this plugin to build smart contract tests using Waffle in Hardhat, taking advantage of both.
+
+This plugin adds a Hardhat-ready version of Waffle to the Hardhat Runtime Environment, and automatically initializes the Waffle Chai matchers.
