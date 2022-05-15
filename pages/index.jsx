@@ -2,7 +2,6 @@ import Head from 'next/head'
 import { ethers } from 'ethers'
 import { useEffect, useState } from 'react'
 import Header from '../components/Header'
-import Footer from '../components/Footer'
 import Sidebar from '../components/Sidebar'
 import Trending from '../components/Trending'
 import Song from '../components/Song'
@@ -10,18 +9,21 @@ import UploadModel from '../components/UploadModel'
 import Alert from '../components/Alert'
 import SongLoading from '../components/SongLoading'
 import mockAPI from '../utils/musicMockApi'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { select_hoverSong } from '../redux/slices/hoverSong'
 import { select_uploadSong } from '../redux/slices/ModelSlices'
 import { AnimatePresence, motion } from 'framer-motion'
 import { getAllSongs, getContract, getSaleSongs } from '../utils/utils'
 import { HiOutlineEmojiSad } from 'react-icons/hi'
 import { VscGraphLine } from 'react-icons/vsc'
+import { select_currentSong, setQueue } from '../redux/slices/currentSong'
 
 const Home = () => {
+  const dispatch = useDispatch()
   const [account, setAccount] = useState(null)
   const [networkApproved, setNetworkApproved] = useState(false)
   const [contract, setContract] = useState(null)
+  const song = useSelector(select_currentSong)
   const [loading, setLoading] = useState(true)
   const [allSongs, setAllSongs] = useState(null)
   const [saleSongs, setSaleSongs] = useState(null)
@@ -40,6 +42,7 @@ const Home = () => {
   useEffect(() => {
     if (allSongs && saleSongs) {
       setLoading(false)
+      dispatch(setQueue(allSongs))
     }
   }, [allSongs, saleSongs])
 
@@ -99,7 +102,11 @@ const Home = () => {
         <Sidebar account={account} />
         <div className="flex-1">
           <Header account={account} login={web3Handler} />
-          <div className="h-screen overflow-y-scroll px-6 pb-56 pt-2">
+          <div
+            className={`h-screen overflow-y-scroll px-6 ${
+              song ? 'pb-56' : 'pb-32'
+            } pt-2`}
+          >
             <motion.h2
               initial={{ x: -20, opacity: 0 }}
               animate={{
@@ -250,7 +257,6 @@ const Home = () => {
           </div>
         </div>
       </main>
-      <Footer />
     </div>
   )
 }

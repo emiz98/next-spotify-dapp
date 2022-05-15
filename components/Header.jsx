@@ -30,7 +30,7 @@ const Header = ({ account, login }) => {
         </h3>
         <h3
           onClick={() => router.push('account')}
-          className={`mt-1 cursor-pointer text-2xl text-gray-400 ${
+          className={`mt-1 cursor-pointer text-xl text-gray-400 ${
             router.pathname == '/account' && 'font-bold !text-white'
           } transition ease-in-out hover:text-white md:text-2xl`}
         >

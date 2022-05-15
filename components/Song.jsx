@@ -36,7 +36,16 @@ const Song = ({
   }
 
   const setNowPlaying = () => {
-    dispatch(setCurrentSong(song))
+    dispatch(
+      setCurrentSong({
+        id,
+        title,
+        subtitle,
+        imageHash: image_hash,
+        musicHash: song_hash,
+        royaltyFee,
+      })
+    )
   }
 
   const setHighlight = (color) => {

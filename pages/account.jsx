@@ -1,7 +1,6 @@
 import Head from 'next/head'
 import { ethers } from 'ethers'
 import Header from '../components/Header'
-import Footer from '../components/Footer'
 import Sidebar from '../components/Sidebar'
 import UploadModel from '../components/UploadModel'
 import Song from '../components/Song'
@@ -23,8 +22,10 @@ import {
   getOwnedSongs,
 } from '../utils/utils'
 import RelistModal from '../components/RelistModal'
+import { select_currentSong } from '../redux/slices/currentSong'
 
 const account = () => {
+  const song = useSelector(select_currentSong)
   const highlightColor = useSelector(select_hoverSong)
   const uploadModal = useSelector(select_uploadSong)
   const relistModal = useSelector(select_relistState)
@@ -129,7 +130,11 @@ const account = () => {
         <Sidebar account={account} />
         <div className="flex-1">
           <Header account={account} />
-          <div className="h-screen overflow-y-scroll px-6 pb-56 pt-2">
+          <div
+            className={`h-screen overflow-y-scroll px-6 ${
+              song ? 'pb-56' : 'pb-32'
+            } pt-2`}
+          >
             <motion.h2
               initial={{ x: -20, opacity: 0 }}
               animate={{
@@ -196,7 +201,7 @@ const account = () => {
                   duration: 0.3,
                 },
               }}
-              className="mb-6 text-3xl font-bold md:mt-14"
+              className="mb-6 mt-10 text-3xl font-bold md:mt-14"
             >
               Listed Songs
             </motion.h2>
@@ -262,7 +267,7 @@ const account = () => {
                   duration: 0.3,
                 },
               }}
-              className="mb-6 text-3xl font-bold md:mt-14"
+              className="mb-6 mt-10 text-3xl font-bold md:mt-14"
             >
               Sold Songs
             </motion.h2>
@@ -321,7 +326,6 @@ const account = () => {
           </div>
         </div>
       </main>
-      <Footer />
     </div>
   )
 }

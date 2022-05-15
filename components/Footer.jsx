@@ -10,21 +10,34 @@ import {
   IoMdVolumeMute,
   IoMdVolumeLow,
 } from 'react-icons/io'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import ReactPlayer from 'react-player'
-import { useSelector } from 'react-redux'
-import { select_currentSong } from '../redux/slices/currentSong'
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  select_currentSong,
+  select_queue,
+  setCurrentSong,
+} from '../redux/slices/currentSong'
 import { formatTime } from '../utils/utils'
 import { motion } from 'framer-motion'
 
 const Footer = () => {
+  const dispatch = useDispatch()
   const song = useSelector(select_currentSong)
+  const queue = useSelector(select_queue)
+  const [songIndex, setSongIndex] = useState(0)
   const [isPlaying, setIsPlaying] = useState(false)
   const [volume, setVolume] = useState(0.2)
   const [seek, setSeek] = useState(0)
   const [startTime, setStartTime] = useState(null)
   const [endTime, setEndTime] = useState(null)
   const [reactPlayer, setReactPlayer] = useState(null)
+
+  useEffect(() => {
+    if (song && queue) {
+      setSongIndex(song.id)
+    }
+  }, [song, queue])
 
   const handleOnProgress = (state) => {
     setStartTime(parseInt(state.playedSeconds))
@@ -53,6 +66,20 @@ const Footer = () => {
     }
   }
 
+  const nextSong = () => {
+    if (songIndex < queue?.length) {
+      songIndex++
+      dispatch(setCurrentSong(queue[songIndex]))
+    }
+  }
+
+  const prevSong = () => {
+    if (songIndex > 0) {
+      songIndex--
+      dispatch(setCurrentSong(queue[songIndex]))
+    }
+  }
+
   return (
     <div>
       {song ? (
@@ -69,24 +96,25 @@ const Footer = () => {
         >
           <ReactPlayer
             ref={ref}
-            url={'http://ipfs.infura.io/ipfs/' + song?.song_hash}
+            url={'http://ipfs.infura.io/ipfs/' + song?.musicHash}
             style={{ display: 'none' }}
             playing={isPlaying}
             // muted={mute}
             volume={volume}
             onProgress={(e) => handleOnProgress(e)}
             onDuration={(e) => handleDuration(e)}
+            onEnded={() => nextSong()}
           />
           <div className="ml-2 flex flex-[0.3] items-center gap-x-5">
             <img
-              className="hidden h-14 w-14 rounded-md border-2 border-spotify object-cover object-cover sm:inline"
-              src={'http://ipfs.infura.io/ipfs/' + song?.image_hash}
+              className="hidden h-14 w-14 rounded-md border-2 border-spotify object-cover sm:inline"
+              src={'http://ipfs.infura.io/ipfs/' + song.imageHash}
               alt="album_image"
             />
             <div>
-              <h3 className="font-bold line-clamp-1">{song?.title}</h3>
+              <h3 className="font-bold line-clamp-1">{song.title}</h3>
               <p className="text-sm text-gray-400 line-clamp-1">
-                {song?.subtitle}
+                {song.subtitle}
               </p>
             </div>
             <FaRegHeart className="icon hidden text-xl md:inline" />
@@ -95,14 +123,24 @@ const Footer = () => {
           <div className="flex flex-1 flex-col items-center space-y-2 sm:flex-[0.4]">
             <div className="flex items-center gap-x-4">
               <IoIosShuffle className="icon footerIcon" />
-              <IoIosSkipBackward className="icon footerIcon" />
+              <IoIosSkipBackward
+                onClick={() => prevSong()}
+                className={`icon footerIcon ${
+                  songIndex == 0 && 'cursor-not-allowed'
+                }`}
+              />
               <div
                 onClick={() => setIsPlaying(!isPlaying)}
                 className="playIcon"
               >
                 {isPlaying ? <BsPauseFill /> : <BsPlayFill />}
               </div>
-              <IoIosSkipForward className="icon footerIcon" />
+              <IoIosSkipForward
+                onClick={() => nextSong()}
+                className={`icon footerIcon ${
+                  songIndex == queue?.length && 'cursor-not-allowed'
+                }`}
+              />
               <TiArrowLoop className="icon footerIcon" />
             </div>
             <div className="flex items-center gap-x-2">
@@ -137,10 +175,10 @@ const Footer = () => {
                   className="icon text-3xl"
                   onClick={() => setVolume(0)}
                 />
-              ) : volume == 0 ? (
+              ) : volume < 0.05 ? (
                 <IoMdVolumeMute
                   className="icon text-3xl"
-                  onClick={() => setVolume(0)}
+                  onClick={() => setVolume(0.3)}
                 />
               ) : (
                 <IoMdVolumeLow
