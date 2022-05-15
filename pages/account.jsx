@@ -6,6 +6,7 @@ import Sidebar from '../components/Sidebar'
 import UploadModel from '../components/UploadModel'
 import Song from '../components/Song'
 import Alert from '../components/Alert'
+import SongLoading from '../components/SongLoading'
 import { useSelector } from 'react-redux'
 import { select_hoverSong } from '../redux/slices/hoverSong'
 import { select_uploadSong } from '../redux/slices/ModelSlices'
@@ -27,12 +28,13 @@ const account = () => {
   const highlightColor = useSelector(select_hoverSong)
   const uploadModal = useSelector(select_uploadSong)
   const relistModal = useSelector(select_relistState)
+  const [loading, setLoading] = useState(true)
   const [networkApproved, setNetworkApproved] = useState(false)
   const [account, setAccount] = useState(null)
   const [contract, setContract] = useState(null)
-  const [ownedSongs, setOwnedSongs] = useState([])
-  const [listedSongs, setListedSongs] = useState([])
-  const [soldSongs, setSoldSongs] = useState([])
+  const [ownedSongs, setOwnedSongs] = useState(null)
+  const [listedSongs, setListedSongs] = useState(null)
+  const [soldSongs, setSoldSongs] = useState(null)
 
   useEffect(() => {
     web3Handler()
@@ -43,6 +45,12 @@ const account = () => {
     contract && listedSongsFunc()
     contract && soldSongsFunc()
   }, [contract])
+
+  useEffect(() => {
+    if (ownedSongs && listedSongs && soldSongs) {
+      setLoading(false)
+    }
+  }, [ownedSongs, listedSongs, soldSongs])
 
   const web3Handler = async () => {
     const accounts = await window.ethereum.request({
@@ -135,8 +143,14 @@ const account = () => {
             >
               My Songs
             </motion.h2>
-            {ownedSongs.length > 0 ? (
-              <div className="grid w-full grid-cols-1 gap-y-5 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+            {loading ? (
+              <div className="grid w-full grid-cols-1 gap-x-5 gap-y-5 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+                {Array.from(Array(5)).map((_, i) => (
+                  <SongLoading key={i} framerIndex={i} />
+                ))}
+              </div>
+            ) : ownedSongs.length > 0 ? (
+              <div className="grid w-full grid-cols-1 gap-x-5 gap-y-5 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
                 {ownedSongs.map(
                   (
                     { id, title, subtitle, imageHash, musicHash, royaltyFee },
@@ -186,8 +200,14 @@ const account = () => {
             >
               Listed Songs
             </motion.h2>
-            {listedSongs.length > 0 ? (
-              <div className="grid w-full grid-cols-1 gap-y-5 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+            {loading ? (
+              <div className="grid w-full grid-cols-1 gap-x-5 gap-y-5 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+                {Array.from(Array(5)).map((_, i) => (
+                  <SongLoading key={i} framerIndex={i} onSale />
+                ))}
+              </div>
+            ) : listedSongs.length > 0 ? (
+              <div className="grid w-full grid-cols-1 gap-x-5 gap-y-5 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
                 {listedSongs?.map(
                   (
                     {
@@ -246,8 +266,14 @@ const account = () => {
             >
               Sold Songs
             </motion.h2>
-            {soldSongs.length > 0 ? (
-              <div className="grid w-full grid-cols-1 gap-y-5 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+            {loading ? (
+              <div className="grid w-full grid-cols-1 gap-x-5 gap-y-5 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+                {Array.from(Array(5)).map((_, i) => (
+                  <SongLoading key={i} framerIndex={i} sold />
+                ))}
+              </div>
+            ) : soldSongs.length > 0 ? (
+              <div className="grid w-full grid-cols-1 gap-x-5 gap-y-5 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
                 {soldSongs?.map(
                   (
                     {

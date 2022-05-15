@@ -54,7 +54,7 @@ const Song = ({
           duration: 0.3,
         },
       }}
-      className="group w-full md:w-52"
+      className="group w-full md:min-w-fit"
       onMouseEnter={() => setHighlight(data.muted)}
       onMouseLeave={() => setHighlight('#065120')}
     >
@@ -69,7 +69,7 @@ const Song = ({
       >
         {sold && (
           <img
-            className="absolute top-0 right-0 z-20 h-16"
+            className="absolute top-0 right-0 z-20 h-20"
             src="prod/sold.png"
             alt="sold"
           />
@@ -117,7 +117,9 @@ const Song = ({
         <div className="flex items-center justify-between rounded-b-lg border-x-2 border-b-2 border-spotify bg-black p-2">
           <div className="flex items-center gap-x-1 text-sm">
             <SiEthereum />
-            <span>{parseFloat(price) + parseFloat(royaltyFee)}</span>
+            <span>
+              {(parseFloat(price) + parseFloat(royaltyFee)).toFixed(2)}
+            </span>
           </div>
           <button
             onClick={() =>

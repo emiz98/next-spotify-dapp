@@ -43,6 +43,16 @@ const Footer = () => {
     setSeek(newValue)
   }
 
+  const handleVolumeOnScroll = (event, newValue) => {
+    if (event.nativeEvent.wheelDelta > 0) {
+      let tempVol = volume + 0.05
+      tempVol < 1 && tempVol > 0 && setVolume(tempVol)
+    } else {
+      let tempVol = volume - 0.05
+      tempVol < 1 && tempVol > 0 && setVolume(tempVol)
+    }
+  }
+
   return (
     <div>
       {song ? (
@@ -119,7 +129,8 @@ const Footer = () => {
             <MdDevices className="icon footerIcon hidden md:inline" />
             <div
               className="ml-5 flex items-center gap-x-3"
-              onWheel={() => setVolume(volume + 0.1)}
+              // onWheel={() => setVolume(volume + 0.1)}
+              onWheel={(event) => handleVolumeOnScroll(event)}
             >
               {volume > 0.5 ? (
                 <IoMdVolumeHigh

@@ -8,6 +8,7 @@ import Trending from '../components/Trending'
 import Song from '../components/Song'
 import UploadModel from '../components/UploadModel'
 import Alert from '../components/Alert'
+import SongLoading from '../components/SongLoading'
 import mockAPI from '../utils/musicMockApi'
 import { useSelector } from 'react-redux'
 import { select_hoverSong } from '../redux/slices/hoverSong'
@@ -21,8 +22,9 @@ const Home = () => {
   const [account, setAccount] = useState(null)
   const [networkApproved, setNetworkApproved] = useState(false)
   const [contract, setContract] = useState(null)
-  const [allSongs, setAllSongs] = useState([])
-  const [saleSongs, setSaleSongs] = useState([])
+  const [loading, setLoading] = useState(true)
+  const [allSongs, setAllSongs] = useState(null)
+  const [saleSongs, setSaleSongs] = useState(null)
   const highlightColor = useSelector(select_hoverSong)
   const uploadModal = useSelector(select_uploadSong)
 
@@ -34,6 +36,12 @@ const Home = () => {
     contract && setAllSongs(await getAllSongs(contract))
     contract && setSaleSongs(await getSaleSongs(contract))
   }, [contract])
+
+  useEffect(() => {
+    if (allSongs && saleSongs) {
+      setLoading(false)
+    }
+  }, [allSongs, saleSongs])
 
   const web3Handler = async () => {
     const accounts = await window.ethereum.request({
@@ -49,6 +57,7 @@ const Home = () => {
       setNetworkApproved(true)
     }
   }
+
   return (
     <div className="relative h-screen overflow-hidden text-white transition-all ease-in-out">
       <Head>
@@ -82,7 +91,9 @@ const Home = () => {
         )}
       </AnimatePresence>
 
-      <AnimatePresence>{networkApproved && <Alert setNetworkApproved={setNetworkApproved}/>}</AnimatePresence>
+      <AnimatePresence>
+        {networkApproved && <Alert setNetworkApproved={setNetworkApproved} />}
+      </AnimatePresence>
 
       <main className="flex">
         <Sidebar account={account} />
@@ -127,8 +138,14 @@ const Home = () => {
             >
               Listen Now
             </motion.h2>
-            {allSongs.length > 0 ? (
-              <div className="grid w-full grid-cols-1 gap-y-5 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+            {loading ? (
+              <div className="grid w-full grid-cols-1 gap-x-5 gap-y-5 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+                {Array.from(Array(5)).map((_, i) => (
+                  <SongLoading key={i} framerIndex={i} />
+                ))}
+              </div>
+            ) : allSongs.length > 0 ? (
+              <div className="grid w-full grid-cols-1 gap-x-5 gap-y-5 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
                 {allSongs?.map(
                   (
                     { id, title, subtitle, imageHash, musicHash },
@@ -177,8 +194,14 @@ const Home = () => {
               Now On Sale
             </motion.h2>
 
-            {saleSongs.length > 0 ? (
-              <div className="grid w-full grid-cols-1 gap-y-5 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+            {loading ? (
+              <div className="grid w-full grid-cols-1 gap-x-5 gap-y-5 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
+                {Array.from(Array(5)).map((_, i) => (
+                  <SongLoading key={i} framerIndex={i} onSale />
+                ))}
+              </div>
+            ) : saleSongs.length > 0 ? (
+              <div className="grid w-full grid-cols-1 gap-x-5 gap-y-5 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6">
                 {saleSongs.map(
                   (
                     {
