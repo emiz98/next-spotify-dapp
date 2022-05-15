@@ -1,0 +1,92 @@
+export default {
+  music: [
+    {
+      id: 1,
+      title: 'Middle of the night',
+      subtitle: 'Elley Duhé',
+      image_hash: '/dev/album.jpg',
+      song_hash: '/dev/mon.mp3',
+    },
+    {
+      id: 2,
+      title: 'Gold',
+      subtitle: 'Koven',
+      image_hash: '/dev/album2.jpg',
+      song_hash: '/dev/gold.mp3',
+    },
+    {
+      id: 3,
+      title: 'frozen',
+      subtitle: 'madonna',
+      image_hash: '/dev/album3.png',
+      song_hash: '/dev/frozen.mp3',
+    },
+    {
+      id: 4,
+      title: 'Calling Me',
+      subtitle: 'Ooyy',
+      image_hash: '/dev/album4.jpg',
+      song_hash: '/dev/cm.mp3',
+    },
+  ],
+  trending: [
+    {
+      id: 1,
+      title: 'Ed Sheeran',
+      subtitle: 'Exclusive Performance',
+      image_hash: '/prod/trending1.png',
+    },
+    {
+      id: 2,
+      title: 'Charlie Puth',
+      subtitle: 'The Voicenotes Tour',
+      image_hash: '/prod/trending2.png',
+    },
+    {
+      id: 3,
+      title: 'Ariana Grande',
+      subtitle: 'Positions Live Performance',
+      image_hash: '/prod/trending3.png',
+    },
+    {
+      id: 4,
+      title: 'Hailee Steinfeld',
+      subtitle: '♥️ Live in Singapore',
+      image_hash: '/prod/trending4.png',
+    },
+  ],
+  onSale: [
+    {
+      id: 1,
+      title: 'Middle of the night',
+      subtitle: 'Elley Duhé',
+      image_hash: '/dev/album.jpg',
+      song_hash: '/dev/mon.mp3',
+      price: '1.57',
+    },
+    {
+      id: 2,
+      title: 'Gold',
+      subtitle: 'Koven',
+      image_hash: '/dev/album2.jpg',
+      song_hash: '/dev/gold.mp3',
+      price: '2.28',
+    },
+    {
+      id: 3,
+      title: 'frozen',
+      subtitle: 'madonna',
+      image_hash: '/dev/album3.png',
+      song_hash: '/dev/frozen.mp3',
+      price: '0.53',
+    },
+    {
+      id: 4,
+      title: 'Calling Me',
+      subtitle: 'Ooyy',
+      image_hash: '/dev/album4.jpg',
+      song_hash: '/dev/cm.mp3',
+      price: '1.00',
+    },
+  ],
+}

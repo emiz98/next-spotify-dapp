@@ -1,38 +1,47 @@
 import Head from 'next/head'
 import { ethers } from 'ethers'
-import { useEffect, useState } from 'react'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
 import Sidebar from '../components/Sidebar'
-import Trending from '../components/Trending'
-import Song from '../components/Song'
 import UploadModel from '../components/UploadModel'
+import Song from '../components/Song'
 import Alert from '../components/Alert'
-import mockAPI from '../utils/musicMockApi'
 import { useSelector } from 'react-redux'
 import { select_hoverSong } from '../redux/slices/hoverSong'
 import { select_uploadSong } from '../redux/slices/ModelSlices'
+import { select_relistState } from '../redux/slices/RelistSlice'
 import { AnimatePresence, motion } from 'framer-motion'
-import { getAllSongs, getContract, getSaleSongs } from '../utils/utils'
-import { HiOutlineEmojiSad } from 'react-icons/hi'
-import { VscGraphLine } from 'react-icons/vsc'
+import { useEffect, useState } from 'react'
+import { BsQuestionSquareFill } from 'react-icons/bs'
+import { MdLibraryMusic } from 'react-icons/md'
+import { HiCurrencyDollar } from 'react-icons/hi'
+import {
+  getAllSoldSongsFilterByOwner,
+  getContract,
+  getListedSongsFilterByOwner,
+  getOwnedSongs,
+} from '../utils/utils'
+import RelistModal from '../components/RelistModal'
 
-const Home = () => {
-  const [account, setAccount] = useState(null)
-  const [networkApproved, setNetworkApproved] = useState(false)
-  const [contract, setContract] = useState(null)
-  const [allSongs, setAllSongs] = useState([])
-  const [saleSongs, setSaleSongs] = useState([])
+const account = () => {
   const highlightColor = useSelector(select_hoverSong)
   const uploadModal = useSelector(select_uploadSong)
+  const relistModal = useSelector(select_relistState)
+  const [networkApproved, setNetworkApproved] = useState(false)
+  const [account, setAccount] = useState(null)
+  const [contract, setContract] = useState(null)
+  const [ownedSongs, setOwnedSongs] = useState([])
+  const [listedSongs, setListedSongs] = useState([])
+  const [soldSongs, setSoldSongs] = useState([])
 
   useEffect(() => {
     web3Handler()
   }, [])
 
   useEffect(async () => {
-    contract && setAllSongs(await getAllSongs(contract))
-    contract && setSaleSongs(await getSaleSongs(contract))
+    contract && ownedSongsFunc()
+    contract && listedSongsFunc()
+    contract && soldSongsFunc()
   }, [contract])
 
   const web3Handler = async () => {
@@ -49,12 +58,24 @@ const Home = () => {
       setNetworkApproved(true)
     }
   }
+
+  const ownedSongsFunc = async () => {
+    setOwnedSongs(await getOwnedSongs(contract))
+  }
+  const listedSongsFunc = async () => {
+    setListedSongs(await getListedSongsFilterByOwner(contract, account))
+  }
+  const soldSongsFunc = async () => {
+    setSoldSongs(await getAllSoldSongsFilterByOwner(contract, account))
+  }
+
   return (
     <div className="relative h-screen overflow-hidden text-white transition-all ease-in-out">
       <Head>
         <title>Spotify 3.0</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
       <AnimatePresence>
         {highlightColor != '#065120' ? (
           <motion.div
@@ -78,16 +99,28 @@ const Home = () => {
 
       <AnimatePresence>
         {uploadModal && account && (
-          <UploadModel contract={contract} setAllSongs={setAllSongs} />
+          <UploadModel contract={contract} ownedSongsFunc={ownedSongsFunc} />
         )}
       </AnimatePresence>
 
-      <AnimatePresence>{networkApproved && <Alert setNetworkApproved={setNetworkApproved}/>}</AnimatePresence>
+      <AnimatePresence>
+        {networkApproved && <Alert setNetworkApproved={setNetworkApproved} />}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {relistModal && account && (
+          <RelistModal
+            contract={contract}
+            ownedSongsFunc={ownedSongsFunc}
+            listedSongsFunc={listedSongsFunc}
+          />
+        )}
+      </AnimatePresence>
 
       <main className="flex">
         <Sidebar account={account} />
         <div className="flex-1">
-          <Header account={account} login={web3Handler} />
+          <Header account={account} />
           <div className="h-screen overflow-y-scroll px-6 pb-56 pt-2">
             <motion.h2
               initial={{ x: -20, opacity: 0 }}
@@ -98,21 +131,47 @@ const Home = () => {
                   duration: 0.3,
                 },
               }}
-              className="mb-6 hidden text-3xl font-bold md:flex"
+              className="mb-6 text-3xl font-bold "
             >
-              Trending
+              My Songs
             </motion.h2>
-            <div className="hidden gap-x-5 overflow-x-scroll scrollbar-hide md:flex">
-              {mockAPI.trending.map(({ id, title, subtitle, image_hash }) => (
-                <Trending
-                  key={id}
-                  id={id}
-                  title={title}
-                  subtitle={subtitle}
-                  image_hash={image_hash}
-                />
-              ))}
-            </div>
+            {ownedSongs.length > 0 ? (
+              <div className="grid w-full grid-cols-1 gap-y-5 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+                {ownedSongs.map(
+                  (
+                    { id, title, subtitle, imageHash, musicHash, royaltyFee },
+                    framerIndex
+                  ) => (
+                    <Song
+                      framerIndex={framerIndex}
+                      key={id}
+                      id={id}
+                      title={title}
+                      subtitle={subtitle}
+                      image_hash={imageHash}
+                      song_hash={musicHash}
+                      royaltyFee={royaltyFee}
+                      listFunc
+                    />
+                  )
+                )}
+              </div>
+            ) : (
+              <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{
+                  y: 0,
+                  opacity: 1,
+                  transition: {
+                    duration: 0.3,
+                  },
+                }}
+                className="flex w-fit items-center gap-x-2 rounded-lg border-2 border-white px-4 py-2"
+              >
+                <BsQuestionSquareFill className="text-2xl" />
+                <h4>Looks like you dont own any music</h4>
+              </motion.div>
+            )}
 
             <motion.h2
               initial={{ x: -20, opacity: 0 }}
@@ -125,61 +184,11 @@ const Home = () => {
               }}
               className="mb-6 text-3xl font-bold md:mt-14"
             >
-              Listen Now
+              Listed Songs
             </motion.h2>
-            {allSongs.length > 0 ? (
+            {listedSongs.length > 0 ? (
               <div className="grid w-full grid-cols-1 gap-y-5 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
-                {allSongs?.map(
-                  (
-                    { id, title, subtitle, imageHash, musicHash },
-                    framerIndex
-                  ) => (
-                    <Song
-                      framerIndex={framerIndex}
-                      key={id}
-                      id={id}
-                      title={title}
-                      subtitle={subtitle}
-                      image_hash={imageHash}
-                      song_hash={musicHash}
-                    />
-                  )
-                )}
-              </div>
-            ) : (
-              <motion.div
-                initial={{ y: 20, opacity: 0 }}
-                animate={{
-                  y: 0,
-                  opacity: 1,
-                  transition: {
-                    duration: 0.3,
-                  },
-                }}
-                className="flex w-fit items-center gap-x-2 rounded-lg border-2 border-white px-4 py-2"
-              >
-                <HiOutlineEmojiSad className="text-2xl" />
-                <h4>Looks like spotify has no music at the moment</h4>
-              </motion.div>
-            )}
-
-            <motion.h2
-              initial={{ x: -20, opacity: 0 }}
-              animate={{
-                x: 0,
-                opacity: 1,
-                transition: {
-                  duration: 0.3,
-                },
-              }}
-              className="mt-14 mb-6 text-3xl font-bold"
-            >
-              Now On Sale
-            </motion.h2>
-
-            {saleSongs.length > 0 ? (
-              <div className="grid w-full grid-cols-1 gap-y-5 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
-                {saleSongs.map(
+                {listedSongs?.map(
                   (
                     {
                       id,
@@ -187,8 +196,8 @@ const Home = () => {
                       subtitle,
                       imageHash,
                       musicHash,
-                      royaltyFee,
                       price,
+                      royaltyFee,
                     },
                     framerIndex
                   ) => (
@@ -201,9 +210,8 @@ const Home = () => {
                       image_hash={imageHash}
                       song_hash={musicHash}
                       price={price}
-                      onSale
                       royaltyFee={royaltyFee}
-                      contract={contract}
+                      onSale
                     />
                   )
                 )}
@@ -220,8 +228,68 @@ const Home = () => {
                 }}
                 className="flex w-fit items-center gap-x-2 rounded-lg border-2 border-white px-4 py-2"
               >
-                <VscGraphLine className="text-2xl" />
-                <h4>Looks like spotify has no sales at the moment</h4>
+                <MdLibraryMusic className="text-2xl" />
+                <h4>Looks like you dont have any music listed</h4>
+              </motion.div>
+            )}
+
+            <motion.h2
+              initial={{ x: -20, opacity: 0 }}
+              animate={{
+                x: 0,
+                opacity: 1,
+                transition: {
+                  duration: 0.3,
+                },
+              }}
+              className="mb-6 text-3xl font-bold md:mt-14"
+            >
+              Sold Songs
+            </motion.h2>
+            {soldSongs.length > 0 ? (
+              <div className="grid w-full grid-cols-1 gap-y-5 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+                {soldSongs?.map(
+                  (
+                    {
+                      id,
+                      title,
+                      subtitle,
+                      imageHash,
+                      musicHash,
+                      price,
+                      royaltyFee,
+                    },
+                    framerIndex
+                  ) => (
+                    <Song
+                      framerIndex={framerIndex}
+                      key={id}
+                      id={id}
+                      title={title}
+                      subtitle={subtitle}
+                      image_hash={imageHash}
+                      song_hash={musicHash}
+                      price={price}
+                      royaltyFee={royaltyFee}
+                      sold
+                    />
+                  )
+                )}
+              </div>
+            ) : (
+              <motion.div
+                initial={{ y: 20, opacity: 0 }}
+                animate={{
+                  y: 0,
+                  opacity: 1,
+                  transition: {
+                    duration: 0.3,
+                  },
+                }}
+                className="flex w-fit items-center gap-x-2 rounded-lg border-2 border-white px-4 py-2"
+              >
+                <HiCurrencyDollar className="text-2xl" />
+                <h4>Looks like you dont have any music sold</h4>
               </motion.div>
             )}
           </div>
@@ -232,4 +300,4 @@ const Home = () => {
   )
 }
 
-export default Home
+export default account

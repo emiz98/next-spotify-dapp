@@ -8,6 +8,8 @@
 # testing
 /coverage
 
+/public/dev
+
 # next.js
 /.next/
 /out/

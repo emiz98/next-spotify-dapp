@@ -1,0 +1,13 @@
+{
+  "name": "hardhat",
+  "version": "1.0.0",
+  "description": "shortcuts for commands",
+  "scripts": {
+    "deploy": "npx hardhat run scripts/deployContract.js --network localhost",
+    "deploy-ropsten": "npx hardhat run scripts/deployContract.js --network ropsten",
+    "chain": "npx hardhat node",
+    "test": "npx hardhat test test/SpotifyMarketplace.test.js"
+  },
+  "author": "emiz",
+  "license": "MIT"
+}

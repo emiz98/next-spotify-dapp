@@ -1,6 +1,9 @@
 {
   "private": true,
   "scripts": {
+    "deploy": "npx hardhat run hardhat/scripts/deployContract.js --network localhost",
+    "chain": "npx hardhat node",
+    "test": "npx hardhat test test/SpotifyMarketplace.test.js",
     "dev": "next dev",
     "build": "next build",
     "start": "next start"
@@ -9,12 +12,23 @@
     "@nomiclabs/hardhat-ethers": "^2.0.5",
     "@nomiclabs/hardhat-waffle": "^2.0.3",
     "@openzeppelin/contracts": "^4.6.0",
+    "@reduxjs/toolkit": "^1.8.1",
+    "@tailwindcss/line-clamp": "^0.4.0",
+    "chai": "^4.3.6",
     "ethereum-waffle": "^3.4.4",
     "ethers": "^5.6.5",
+    "framer-motion": "^6.3.3",
     "hardhat": "^2.9.3",
+    "ipfs-http-client": "33.1.1",
     "next": "latest",
     "react": "^17.0.2",
-    "react-dom": "^17.0.2"
+    "react-dom": "^17.0.2",
+    "react-icons": "^4.3.1",
+    "react-jazzicon": "^1.0.3",
+    "react-palette": "^1.0.2",
+    "react-player": "^2.10.1",
+    "react-redux": "^8.0.1",
+    "tailwind-scrollbar-hide": "^1.1.7"
   },
   "devDependencies": {
     "@types/node": "17.0.4",
