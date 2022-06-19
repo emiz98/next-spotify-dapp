@@ -34,3 +34,13 @@ This plugin brings to Hardhat the Ethereum library ethers.js, which allows you t
 You can use this plugin to build smart contract tests using Waffle in Hardhat, taking advantage of both.
 
 This plugin adds a Hardhat-ready version of Waffle to the Hardhat Runtime Environment, and automatically initializes the Waffle Chai matchers.
+
+<br/>
+
+## Openzeppelin
+
+![alt text](https://blog.openzeppelin.com/wp-content/uploads/2019/05/logo_OZ_white.png)
+
+#### ERC-20, ERC-721, ERC-1155
+
+https://www.leewayhertz.com/erc-20-vs-erc-721-vs-erc-1155/
