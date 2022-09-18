@@ -96,7 +96,7 @@ const Footer = () => {
         >
           <ReactPlayer
             ref={ref}
-            url={'http://ipfs.infura.io/ipfs/' + song?.musicHash}
+            url={'https://infura-ipfs.io/ipfs/' + song?.musicHash}
             style={{ display: 'none' }}
             playing={isPlaying}
             // muted={mute}
@@ -108,7 +108,7 @@ const Footer = () => {
           <div className="ml-2 flex flex-[0.3] items-center gap-x-5">
             <img
               className="hidden h-14 w-14 rounded-md border-2 border-spotify object-cover sm:inline"
-              src={'http://ipfs.infura.io/ipfs/' + song.imageHash}
+              src={'https://infura-ipfs.io/ipfs/' + song.imageHash}
               alt="album_image"
             />
             <div>

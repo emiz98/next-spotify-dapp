@@ -24,7 +24,7 @@ const Song = ({
   contract,
 }) => {
   const dispatch = useDispatch()
-  const { data } = usePalette('https://ipfs.infura.io/ipfs/' + image_hash)
+  const { data } = usePalette('https://infura-ipfs.io/ipfs/' + image_hash)
   const [isPlaying, setIsPlaying] = useState(false)
   const song = {
     id,
@@ -69,7 +69,7 @@ const Song = ({
     >
       <div
         style={{
-          backgroundImage: `url(http://ipfs.infura.io/ipfs/${image_hash})`,
+          backgroundImage: `url(https://infura-ipfs.io/ipfs/${image_hash})`,
         }}
         className={`relative flex h-52 cursor-pointer overflow-hidden rounded-t-lg bg-center ${
           !onSale && 'rounded-b-lg'
