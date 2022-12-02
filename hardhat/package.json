@@ -4,7 +4,7 @@
   "description": "shortcuts for commands",
   "scripts": {
     "deploy": "npx hardhat run scripts/deployContract.js --network localhost",
-    "deploy-ropsten": "npx hardhat run scripts/deployContract.js --network ropsten",
+    "deploy-goerli": "npx hardhat run scripts/deployContract.js --network goerli",
     "chain": "npx hardhat node",
     "test": "npx hardhat test test/SpotifyMarketplace.test.js"
   },

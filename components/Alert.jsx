@@ -39,7 +39,7 @@ const Alert = ({ setNetworkApproved }) => {
         <div className="flex flex-col items-center">
           <img className="w-20 object-contain" src="prod/eth.gif" alt="eth" />
           <h2 className="mt-5 w-2/3 animate-pulse text-center text-lg text-gray-100">
-            Please change the network to ropsten testnet!
+            Please change the network to goerli testnet!
           </h2>
         </div>
       </motion.div>

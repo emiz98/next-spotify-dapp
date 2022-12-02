@@ -9,9 +9,12 @@ import { useRef, useState } from 'react'
 
 const ipfsClient = require('ipfs-http-client')
 const ipfs = ipfsClient({
-  host: 'ipfs.infura.io',
+  host: 'infura-ipfs.io',
   port: 5001,
   protocol: 'https',
+  headers: {
+    authorization: auth,
+  },
 })
 
 const UploadModel = ({ contract, setAllSongs, ownedSongsFunc }) => {

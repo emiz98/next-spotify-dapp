@@ -60,7 +60,7 @@ const account = () => {
     setAccount(accounts[0])
     const provider = new ethers.providers.Web3Provider(window.ethereum)
     const { chainId } = await provider.getNetwork()
-    if (chainId == 3) {
+    if (chainId == 5) {
       const signer = provider.getSigner()
       setContract(await getContract(signer))
     } else {

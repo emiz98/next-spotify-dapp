@@ -8,7 +8,7 @@ const ALCHEMY_API_KEY = process.env.ALCHEMY_API_KEY
 // To export your private key from Metamask, open Metamask and
 // go to Account Details > Export Private Key
 // Be aware of NEVER putting real Ether into testing accounts
-const ROPSTEN_PRIVATE_KEY = process.env.ROPSTEN_PRIVATE_KEY
+const GOERLY_PRIVATE_KEY = process.env.GOERLY_PRIVATE_KEY
 
 module.exports = {
   solidity: '0.8.4',
@@ -16,9 +16,9 @@ module.exports = {
     timeout: 100000000,
   },
   networks: {
-    ropsten: {
-      url: `https://eth-ropsten.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
-      accounts: [`${ROPSTEN_PRIVATE_KEY}`],
+    goerli: {
+      url: `https://eth-goerli.alchemyapi.io/v2/${ALCHEMY_API_KEY}`,
+      accounts: [`${GOERLY_PRIVATE_KEY}`],
     },
   },
 }
